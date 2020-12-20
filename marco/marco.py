@@ -81,7 +81,8 @@ def _process_record(record, as_supervised=True, with_source=False):
         return_list.append(source)
 
     if len(return_list) > 0:
-        return return_list.append(img)
+        return_list.append(img)
+        return return_list
     else:
         return img
 
