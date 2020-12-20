@@ -22,13 +22,16 @@ IMAGE_FEATURE_DESCR = {
 
 def load(data_dir,
          shuffle_files=False,
-         as_supervised=True,):
+         as_supervised=True,
+         with_source=False):
     list_ds = tf.data.Dataset.list_files(data_dir + "/*",
                                          shuffle=shuffle_files,
                                          seed=78165)
     raw_ds = tf.data.TFRecordDataset(list_ds)
     parsed_ds = raw_ds.map(_parse_image_function)
-    labelled_ds = parsed_ds.map(lambda x: _process_record(x, as_supervised),
+    labelled_ds = parsed_ds.map(lambda x: _process_record(x,
+                                                          as_supervised,
+                                                          with_source),
                                 num_parallel_calls=AUTOTUNE)
 
     return labelled_ds
@@ -62,15 +65,23 @@ def prepare_for_training(ds,
 
     return ds
 
-def _process_record(record, as_supervised=True):
+def _process_record(record, as_supervised=True, with_source=False):
     img = record["image/encoded"]
     img = _decode_img(img)
+
+    return_list = []
 
     if as_supervised:
         index = record["image/class/label"]
         # label = tf.one_hot(index, depth=4, on_value=True, off_value=False)
         label = index
-        return img, label
+        return_list.append(label)
+    if with_source:
+        source = record["image/class/source"]
+        return_list.append(source)
+
+    if len(return_list) > 0:
+        return return_list.append(img)
     else:
         return img
 
