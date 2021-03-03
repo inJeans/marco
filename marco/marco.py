@@ -23,15 +23,18 @@ IMAGE_FEATURE_DESCR = {
 def load(data_dir,
          shuffle_files=False,
          as_supervised=True,
-         with_source=False):
+         with_source=False,
+         as_source=None):
     list_ds = tf.data.Dataset.list_files(data_dir + "/*",
                                          shuffle=shuffle_files,
                                          seed=78165)
     raw_ds = tf.data.TFRecordDataset(list_ds)
     parsed_ds = raw_ds.map(_parse_image_function)
+    if as_source:
+        parsed_ds = parsed_ds.filter(lambda x: x["image/class/source"] == as_source)
     labelled_ds = parsed_ds.map(lambda x: _process_record(x,
                                                           as_supervised,
-                                                          with_source),
+                                                          with_source,),
                                 num_parallel_calls=AUTOTUNE)
 
     return labelled_ds

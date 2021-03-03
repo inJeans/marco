@@ -2,14 +2,16 @@ from marco import marco
 
 import tensorflow as tf
 
-MARCO_TRAIN_DIR = "/scratch1/c3/data/MARCO/train-jpg"
+# MARCO_TRAIN_DIR = "/scratch1/c3/data/MARCO/train-jpg"
+MARCO_TRAIN_DIR = "/Users/miMacbookPro/Desktop/MARCO"
 
 def main():
     print("Hello")
     print("Hello again")
 
     train_ds = marco.load(MARCO_TRAIN_DIR,
-                          as_supervised=False)
+                          as_supervised=False,
+                          as_source=1)
     train_ds = marco.prepare_for_training(train_ds,
                                           cache=False)
 
