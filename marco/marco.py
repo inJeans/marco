@@ -1,7 +1,7 @@
 import tensorflow as tf
 
-IMG_WIDTH = 256
-IMG_HEIGHT = 256
+IMG_WIDTH = 599
+IMG_HEIGHT = 599
 BATCH_SIZE = 64
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
